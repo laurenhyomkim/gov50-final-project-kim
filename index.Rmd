@@ -1,21 +1,21 @@
 ---
 title: "Gov 50 Final Project"
-author: "Lauren Kim"
+author: "Lauren"
 description: "My final project"
 output:
   distill::distill_article:
     self_contained: false
 ---
 
-##Project thoughts
+## Project thoughts
 Hello! I have changed my proposal and project trajectory. I wasn’t sure if I had to redo milestones 1 and 2, but decided to provide a brief summary. For my final project, I would like to explore the correlation between music and mental health, specifically whether listening to a certain type of music improves levels of depression.
 
-##Proposal
+## Proposal
 Is there a correlation between frequency of a certain music genre listened to and depression levels? Do people who suffer with depression gravitate towards a specific type of music to improve mood and cognition? My hypothesis is that depression is positively correlated with listening to music with higher BPM and more uplifting/energizing lyrics.
 
 Link to my data source: https://www.kaggle.com/datasets/catherinerasgaitis/mxmh-survey-results/data
 
-Data Visualization
+## Data Visualization
 ```{r}
 library(readr)
 library(dplyr)
