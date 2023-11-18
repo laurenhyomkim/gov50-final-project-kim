@@ -7,8 +7,36 @@ output:
     self_contained: false
 ---
 
+##Project thoughts
+Hello! I have changed my proposal and project trajectory. I wasn’t sure if I had to redo milestones 1 and 2, but decided to provide a brief summary. For my final project, I would like to explore the correlation between music and mental health, specifically whether listening to a certain type of music improves levels of depression.
 
+##Proposal
+Is there a correlation between frequency of a certain music genre listened to and depression levels? Do people who suffer with depression gravitate towards a specific type of music to improve mood and cognition? My hypothesis is that depression is positively correlated with listening to music with higher BPM and more uplifting/energizing lyrics.
 
-## Project thoughts
+Link to my data source: https://www.kaggle.com/datasets/catherinerasgaitis/mxmh-survey-results/data
 
-I am interested in exploring data related to...
+Data Visualization
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+# Read the data
+mxmh_survey_results <- read_csv("~/Desktop/gov50/mxmh_survey_results.csv")
+frequency_mapping <- c("Never" = 0, "Rarely" = 1, "Sometimes" = 2, "Often" = 3, "Very frequently" = 4)
+mxmh_survey_results$`Frequency [Rock]` <- factor(mxmh_survey_results$`Frequency [Rock]`, levels = names(frequency_mapping))
+mxmh_survey_results$`Frequency [Rock] Numeric` <- as.numeric(mxmh_survey_results$`Frequency [Rock]`)
+mxmh_survey_results <- mxmh_survey_results |>
+  filter(`Music effects` == "Improve")
+
+plot <- ggplot(mxmh_survey_results, aes(x = Depression, y = `Frequency [Rock] Numeric`)) +
+  geom_point(aes(color = as.factor(Depression)), alpha = 0.6) + # Use color to denote the different levels of depression
+  geom_smooth(method = "lm", se = FALSE, color = "blue") + # Add a linear regression line without the confidence interval shading
+  scale_y_continuous(limits = c(0, 4), breaks = 0:4, 
+                     labels = c("Never", "Rarely", "Sometimes", "Often", "Very frequently")) + # Adjust the scale of y-axis
+  labs(x = "Depression Level", y = "Frequency of Rock Music", 
+       title = "Correlation between Depression and Frequency of Rock Music") +
+  theme_minimal() 
+plot
+```
+
