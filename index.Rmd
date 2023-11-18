@@ -23,6 +23,8 @@ library(ggplot2)
 
 # Read the data
 mxmh_survey_results <- read_csv("~/Desktop/gov50/mxmh_survey_results.csv")
+mxmh_survey_results
+
 frequency_mapping <- c("Never" = 0, "Rarely" = 1, "Sometimes" = 2, "Often" = 3, "Very frequently" = 4)
 mxmh_survey_results$`Frequency [Rock]` <- factor(mxmh_survey_results$`Frequency [Rock]`, levels = names(frequency_mapping))
 mxmh_survey_results$`Frequency [Rock] Numeric` <- as.numeric(mxmh_survey_results$`Frequency [Rock]`)
@@ -40,3 +42,9 @@ plot <- ggplot(mxmh_survey_results, aes(x = Depression, y = `Frequency [Rock] Nu
 plot
 ```
 
+## Analysis
+```{r}
+fit.app <- lm(BPM ~ Depression, data = mxmh_survey_results)
+fit.app
+```
+For a one-point increase in indicated depression level, BPM of music listened to increased by 0.59 points. This means that there is a slightly positive correlation between depression levels and BPM of music listened to.

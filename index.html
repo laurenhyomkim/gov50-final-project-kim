@@ -1557,7 +1557,30 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='co'># Read the data</span></span>
 <span><span class='va'>mxmh_survey_results</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"~/Desktop/gov50/mxmh_survey_results.csv"</span><span class='op'>)</span></span>
-<span><span class='va'>frequency_mapping</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Never"</span> <span class='op'>=</span> <span class='fl'>0</span>, <span class='st'>"Rarely"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"Sometimes"</span> <span class='op'>=</span> <span class='fl'>2</span>, <span class='st'>"Often"</span> <span class='op'>=</span> <span class='fl'>3</span>, <span class='st'>"Very frequently"</span> <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span></span>
+<span><span class='va'>mxmh_survey_results</span></span></code></pre>
+</div>
+<pre><code># A tibble: 736 × 33
+   Timestamp            Age Primary streaming servic…¹ `Hours per day`
+   &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;                                &lt;dbl&gt;
+ 1 8/27/2022 19:29:02    18 Spotify                                3  
+ 2 8/27/2022 19:57:31    63 Pandora                                1.5
+ 3 8/27/2022 21:28:18    18 Spotify                                4  
+ 4 8/27/2022 21:40:40    61 YouTube Music                          2.5
+ 5 8/27/2022 21:54:47    18 Spotify                                4  
+ 6 8/27/2022 21:56:50    18 Spotify                                5  
+ 7 8/27/2022 22:00:29    18 YouTube Music                          3  
+ 8 8/27/2022 22:18:59    21 Spotify                                1  
+ 9 8/27/2022 22:33:05    19 Spotify                                6  
+10 8/27/2022 22:44:03    18 I do not use a streaming …             1  
+# ℹ 726 more rows
+# ℹ abbreviated name: ¹​`Primary streaming service`
+# ℹ 29 more variables: `While working` &lt;chr&gt;, Instrumentalist &lt;chr&gt;,
+#   Composer &lt;chr&gt;, `Fav genre` &lt;chr&gt;, Exploratory &lt;chr&gt;,
+#   `Foreign languages` &lt;chr&gt;, BPM &lt;dbl&gt;,
+#   `Frequency [Classical]` &lt;chr&gt;, `Frequency [Country]` &lt;chr&gt;,
+#   `Frequency [EDM]` &lt;chr&gt;, `Frequency [Folk]` &lt;chr&gt;, …</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>frequency_mapping</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Never"</span> <span class='op'>=</span> <span class='fl'>0</span>, <span class='st'>"Rarely"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"Sometimes"</span> <span class='op'>=</span> <span class='fl'>2</span>, <span class='st'>"Often"</span> <span class='op'>=</span> <span class='fl'>3</span>, <span class='st'>"Very frequently"</span> <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span></span>
 <span><span class='va'>mxmh_survey_results</span><span class='op'>$</span><span class='va'>`Frequency [Rock]`</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>mxmh_survey_results</span><span class='op'>$</span><span class='va'>`Frequency [Rock]`</span>, levels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>frequency_mapping</span><span class='op'>)</span><span class='op'>)</span></span>
 <span><span class='va'>mxmh_survey_results</span><span class='op'>$</span><span class='va'>`Frequency [Rock] Numeric`</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>mxmh_survey_results</span><span class='op'>$</span><span class='va'>`Frequency [Rock]`</span><span class='op'>)</span></span>
 <span><span class='va'>mxmh_survey_results</span> <span class='op'>&lt;-</span> <span class='va'>mxmh_survey_results</span> <span class='op'>|&gt;</span></span>
@@ -1575,7 +1598,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <p><img src="index_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<h2 id="analysis">Analysis</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fit.app</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>BPM</span> <span class='op'>~</span> <span class='va'>Depression</span>, data <span class='op'>=</span> <span class='va'>mxmh_survey_results</span><span class='op'>)</span></span>
+<span><span class='va'>fit.app</span></span></code></pre>
+</div>
+<pre><code>
+Call:
+lm(formula = BPM ~ Depression, data = mxmh_survey_results)
+
+Coefficients:
+(Intercept)   Depression  
+     120.61         0.59  </code></pre>
+</div>
+<p>For a one-point increase in indicated depression level, BPM of music listened to increased by 0.59 points. This means that there is a slightly positive correlation between depression levels and BPM of music listened to.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
