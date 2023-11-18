@@ -44,7 +44,10 @@ plot
 
 ## Analysis
 ```{r}
+library(modelsummary)
+
 fit.app <- lm(BPM ~ Depression, data = mxmh_survey_results)
-fit.app
+modelsummary(list(fit.app))
 ```
+
 For a one-point increase in indicated depression level, BPM of music listened to increased by 0.59 points. This means that there is a slightly positive correlation between depression levels and BPM of music listened to.
