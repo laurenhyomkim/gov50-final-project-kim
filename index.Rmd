@@ -1,53 +1,142 @@
 ---
-title: "Gov 50 Final Project"
-author: "Lauren"
-description: "My final project"
+title: "Exploring the Link Between Music and Mental Health"
+author: "Lauren Kim"
+description: "An Analysis of " 
 output:
-  distill::distill_article:
-    self_contained: false
+distill::distill_article:
+self_contained: false
 ---
 
-## Project thoughts
-Hello! I have changed my proposal and project trajectory. I wasn’t sure if I had to redo milestones 1 and 2, but decided to provide a brief summary. For my final project, I would like to explore the correlation between music and mental health, specifically whether listening to a certain type of music improves levels of depression.
+## Introuction
+Is there a correlation between mental health issues and music preference? Do people who suffer from high levels of anxiety, depression, insomnia, and OCD listen to certain types of music more frequently? I hypothesize that people with higher levels of these mental disorders will listen to metal, rock, and pop music more frequently than other genres because of their higher BPM and dynamic nature. The answer to my research question may provide valuable insights into how music can serve as a form of self-regulation or emotional management for those experiencing these conditions. Exploring the relationship between mental health and music could also open up new avenues for mental health interventions. If certain genres are found to correlate with certain mental health disorders, this could inform music therapy. Tailored playlists can be used as a form of treatment. 
 
-## Proposal
-Is there a correlation between frequency of a certain music genre listened to and depression levels? Do people who suffer with depression gravitate towards a specific type of music to improve mood and cognition? My hypothesis is that depression is positively correlated with listening to music with higher BPM and more uplifting/energizing lyrics.
+## Data
+The data source used for this analysis was sourced from Kaggle, (https://www.kaggle.com/datasets/catherinerasgaitis/mxmh-survey-results/data), specifically the "Music and Mental Health Survey Results" dataset. This data set is composed of survey responses collected with the intent of finding the correlation between music preferences and mental health issues, including anxiety, depression, insomnia, and OCD. The key dependent variables are related to mental health, namely levels of anxiety, depression, insomnia, and OCD. These are measured through self-reported survey responses, where participants rated their experiences on a pre-set scale. The independent variables are music preferences. They were measured based on frequency of listening to various music genres, such as metal, rock, pop, and others. Participants in the survey provided their preferences, categorized as "Never", "Rarely", "Sometimes", "Often" or "Very Frequently". 
 
-Link to my data source: https://www.kaggle.com/datasets/catherinerasgaitis/mxmh-survey-results/data
+My data is cross sectional as it refers to data collected at a single point in time over a short period. The observations in the dataset represent a snapshot of the conditions or characteristics being studied at that time. Below I have included histograms and box plots for all each mental health variable (anxiety, depression, insomnia, and OCD). Based off of my plots, there were higher means and frequency of anxiety and depression levels among survey respondents. 
 
-## Data Visualization
 ```{r}
-library(readr)
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
+
+survey_data <- read.csv("~/Desktop/gov50/mxmh_survey_results.csv")
+
+master_stats <- survey_data |>
+  select(Anxiety, Depression, Insomnia, OCD)|>
+  summarise_all(list(mean = ~mean(., na.rm = TRUE), 
+                     median = ~median(., na.rm = TRUE), 
+                     sd = ~sd(., na.rm = TRUE)))
+
+master_stats
+
+# Histograms for each mental health variable
+hist(survey_data$Anxiety, main = "Histogram of Anxiety Levels", xlab = "Anxiety Level")
+hist(survey_data$Depression, main = "Histogram of Depression Levels", xlab = "Depression Level")
+hist(survey_data$Insomnia, main = "Histogram of Insomnia Levels", xlab = "Insomnia Level")
+hist(survey_data$OCD, main = "Histogram of OCD Levels", xlab = "OCD Level")
+
+# Boxplots for each mental health variable
+boxplot(survey_data$Anxiety, main = "Box Plot of Anxiety Levels", ylab = "Anxiety Level")
+boxplot(survey_data$Depression, main = "Box Plot of Depression Levels", ylab = "Depression Level")
+boxplot(survey_data$Insomnia, main = "Box Plot of Insomnia Levels", ylab = "Insomnia Level")
+boxplot(survey_data$OCD, main = "Box Plot of OCD Levels", ylab = "OCD Level")
+```
+
+## Results Section
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(knitr)
 
 # Read the data
-mxmh_survey_results <- read_csv("~/Desktop/gov50/mxmh_survey_results.csv")
-mxmh_survey_results
+survey_data <- read.csv("~/Desktop/gov50/mxmh_survey_results.csv")
 
-frequency_mapping <- c("Never" = 0, "Rarely" = 1, "Sometimes" = 2, "Often" = 3, "Very frequently" = 4)
-mxmh_survey_results$`Frequency [Rock]` <- factor(mxmh_survey_results$`Frequency [Rock]`, levels = names(frequency_mapping))
-mxmh_survey_results$`Frequency [Rock] Numeric` <- as.numeric(mxmh_survey_results$`Frequency [Rock]`)
-mxmh_survey_results <- mxmh_survey_results |>
-  filter(`Music effects` == "Improve")
+# Inspect the data
+head(survey_data)
 
-plot <- ggplot(mxmh_survey_results, aes(x = Depression, y = `Frequency [Rock] Numeric`)) +
-  geom_point(aes(color = as.factor(Depression)), alpha = 0.6) + # Use color to denote the different levels of depression
-  geom_smooth(method = "lm", se = FALSE, color = "blue") + # Add a linear regression line without the confidence interval shading
-  scale_y_continuous(limits = c(0, 4), breaks = 0:4, 
-                     labels = c("Never", "Rarely", "Sometimes", "Often", "Very frequently")) + # Adjust the scale of y-axis
-  labs(x = "Depression Level", y = "Frequency of Rock Music", 
-       title = "Correlation between Depression and Frequency of Rock Music") +
-  theme_minimal() 
-plot
+# Assuming high levels are defined (e.g., Anxiety > 7, Depression > 7, etc.)
+# Adjust these values as per your specific criteria
+high_levels <- survey_data |>
+  filter(Anxiety > 7, Depression > 7, Insomnia > 7, OCD > 7)
+
+# Analyzing music genre preferences
+# Assuming genres are in columns like 'Frequency [Genre]'
+# Adjust column names as per your dataset
+genre_preferences <- high_levels |>
+  select(starts_with("Frequency")) |>
+  summarise_all(~mean(. == "Very frequently", na.rm = TRUE))
+
+# Displaying the results
+kable(genre_preferences, format = "markdown", caption = "Music Genre Preferences among Individuals with High Levels of Anxiety, Depression, Insomnia, and OCD")
 ```
+The above table shows the mean proportion of individuals with high levels of Anxiety, Depression, Insomnia, and OCD (as defined by levels greater than 7), who report listening to each music genre "Very frequently". As shown in the table, pop music has the highest mean proportion (0.5) followed by metal, rock, and video game music (each of which are 0.375). 
 
-## Analysis
 ```{r}
-library(modelsummary)
+library(tidyverse)
+library(RColorBrewer)
 
-fit.app <- lm(BPM ~ Depression, data = mxmh_survey_results)
-modelsummary(list(fit.app))
+survey_data <- read.csv("~/Desktop/gov50/mxmh_survey_results.csv")
+
+survey_data <- survey_data |>
+  mutate(across(starts_with("Frequency"), ~case_when(
+    . == "Never" ~ 0,
+    . == "Rarely" ~ 1,
+    . == "Sometimes" ~ 2,
+    . == "Often" ~ 3,
+    . == "Very frequently" ~ 4,
+    TRUE ~ NA_real_
+  )))
+
+correlation_data <- survey_data |>
+  summarise(across(starts_with("Frequency"), ~cor(., survey_data$Depression, use = "complete.obs"), .names = "corr_{.col}"))
+
+correlation_data_long <- pivot_longer(correlation_data, cols = starts_with("corr"), names_to = "Genre", values_to = "Correlation")
+
+correlation_data_long$Genre <- str_remove(correlation_data_long$Genre, "corr_Frequency\\[")
+
+ggplot(correlation_data_long, aes(x = str_replace(Genre, "corr_Frequency\\.", ""), y = Correlation)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom") +
+  labs(title = "Correlation between Depression and Music Genre Preferences",
+       x = "Music Genre",
+       y = "Correlation Coefficient") +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(9, "Set1"))(length(unique(correlation_data_long$Genre))))
 ```
+The above is a bar graph mapping the correlation between Depression levels of survey respondents and music genre preferences, measured by frequency with which the survey respodendent listens to that genre. Rock music is shown to have the highest positive correlation, followed by metal, rap, and folk music. I chose to focus on depression levels over the other mental health issues because of how common it is among college students in America--in this way, it seemed most relevant to my life and I was most interested in understanding the effects of certain music genres on depression.  
+```{r}
+# Load necessary libraries
+library(tidyverse)
 
-For a one-point increase in indicated depression level, BPM of music listened to increased by 0.59 points. This means that there is a slightly positive correlation between depression levels and BPM of music listened to.
+# Read the data
+survey_data <- read.csv("~/Desktop/gov50/mxmh_survey_results.csv")
+
+# Assuming 'Depression' is already a numeric variable
+# and 'Frequency [Rock]' is a categorical variable that needs to be converted into a numeric scale
+
+# Convert 'Frequency [Rock]' into numeric values
+survey_data <- survey_data |>
+  mutate(Frequency_Rock_Num = case_when(
+    `Frequency..Rock.` == "Never" ~ 0,
+    `Frequency..Rock.` == "Rarely" ~ 1,
+    `Frequency..Rock.` == "Sometimes" ~ 2,
+    `Frequency..Rock.` == "Often" ~ 3,
+    `Frequency..Rock.` == "Very frequently" ~ 4,
+    TRUE ~ NA_real_  # Assign NA for any other cases or missing data
+  ))
+
+# Remove rows with NA in 'Depression' or 'Frequency [Rock]'
+survey_data <- drop_na(survey_data, Depression, Frequency_Rock_Num)
+
+# Run the regression analysis
+regression_model <- lm(Depression ~ Frequency_Rock_Num, data = survey_data)
+
+# Display the summary of the regression model
+summary(regression_model)
+
+```
+I chose to isolate the rock music genre in my regression analysis because the rock genre showed the highest correlation coefficient in my bar graph. In my regression model, depression was the dependent variable and the frequency of listening to rock music was the independent variable. The resuiduals showed the differences between the observed and predicted values of depression. The spread (from -5.3691 to 6.1782) showed the variability in the model's predictions. The intercept (3.82178) showed that when the frequency of listening to rock music is 0, the predicted level of depression is 3.82178. The Frequency_Rock_Num (0.38682) was the coefficient of interest. This suggests that for each one-unit increase in the frequency of listening to rock music, the level of depression increases by an average of 0.38682 units. The standard error, which indicates the variability of this estimate, was 0.07486. The correlation coefficient's p-value (3.064 e-07) is very small and well below the threshold for statistical significance. This shows that the relationship is statistically significant and not likely due to random chance. 
+
+The positive coefficient for "Frequency_Rock_Num" shows that there is a positive association between listening to rock music and depression levels. Since this is an observational study, not an experimental one, we cannot infer causality from this relationship. Frequent listening to rock music may not cause people depression, and depression may not cause a preferenece for the rock music genre. The low R-squared value shows that while there may be a positive association, rock music genre preference is not necessarily a predictor of depression. There might be other factors not included in the model that lead to this correlation.
+
+## Conclusion
