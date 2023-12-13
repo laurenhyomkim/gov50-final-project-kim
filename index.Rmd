@@ -1,7 +1,7 @@
 ---
 title: "Exploring the Link Between Music and Mental Health"
 author: "Lauren Kim"
-description: "An Analysis of " 
+description: "An Analysis of the Link Between Depression and Rock Music"
 output:
 distill::distill_article:
 self_contained: false
@@ -43,29 +43,20 @@ boxplot(survey_data$OCD, main = "Box Plot of OCD Levels", ylab = "OCD Level")
 
 ## Results Section
 ```{r}
-# Load necessary libraries
 library(tidyverse)
 library(knitr)
 
-# Read the data
 survey_data <- read.csv("~/Desktop/gov50/mxmh_survey_results.csv")
 
-# Inspect the data
 head(survey_data)
 
-# Assuming high levels are defined (e.g., Anxiety > 7, Depression > 7, etc.)
-# Adjust these values as per your specific criteria
 high_levels <- survey_data |>
   filter(Anxiety > 7, Depression > 7, Insomnia > 7, OCD > 7)
 
-# Analyzing music genre preferences
-# Assuming genres are in columns like 'Frequency [Genre]'
-# Adjust column names as per your dataset
 genre_preferences <- high_levels |>
   select(starts_with("Frequency")) |>
   summarise_all(~mean(. == "Very frequently", na.rm = TRUE))
 
-# Displaying the results
 kable(genre_preferences, format = "markdown", caption = "Music Genre Preferences among Individuals with High Levels of Anxiety, Depression, Insomnia, and OCD")
 ```
 The above table shows the mean proportion of individuals with high levels of Anxiety, Depression, Insomnia, and OCD (as defined by levels greater than 7), who report listening to each music genre "Very frequently". As shown in the table, pop music has the highest mean proportion (0.5) followed by metal, rock, and video game music (each of which are 0.375). 
@@ -105,16 +96,10 @@ ggplot(correlation_data_long, aes(x = str_replace(Genre, "corr_Frequency\\.", ""
 ```
 The above is a bar graph mapping the correlation between Depression levels of survey respondents and music genre preferences, measured by frequency with which the survey respodendent listens to that genre. Rock music is shown to have the highest positive correlation, followed by metal, rap, and folk music. I chose to focus on depression levels over the other mental health issues because of how common it is among college students in America--in this way, it seemed most relevant to my life and I was most interested in understanding the effects of certain music genres on depression.  
 ```{r}
-# Load necessary libraries
 library(tidyverse)
 
-# Read the data
 survey_data <- read.csv("~/Desktop/gov50/mxmh_survey_results.csv")
 
-# Assuming 'Depression' is already a numeric variable
-# and 'Frequency [Rock]' is a categorical variable that needs to be converted into a numeric scale
-
-# Convert 'Frequency [Rock]' into numeric values
 survey_data <- survey_data |>
   mutate(Frequency_Rock_Num = case_when(
     `Frequency..Rock.` == "Never" ~ 0,
@@ -125,13 +110,10 @@ survey_data <- survey_data |>
     TRUE ~ NA_real_  # Assign NA for any other cases or missing data
   ))
 
-# Remove rows with NA in 'Depression' or 'Frequency [Rock]'
 survey_data <- drop_na(survey_data, Depression, Frequency_Rock_Num)
 
-# Run the regression analysis
 regression_model <- lm(Depression ~ Frequency_Rock_Num, data = survey_data)
 
-# Display the summary of the regression model
 summary(regression_model)
 
 ```
@@ -140,3 +122,4 @@ I chose to isolate the rock music genre in my regression analysis because the ro
 The positive coefficient for "Frequency_Rock_Num" shows that there is a positive association between listening to rock music and depression levels. Since this is an observational study, not an experimental one, we cannot infer causality from this relationship. Frequent listening to rock music may not cause people depression, and depression may not cause a preferenece for the rock music genre. The low R-squared value shows that while there may be a positive association, rock music genre preference is not necessarily a predictor of depression. There might be other factors not included in the model that lead to this correlation.
 
 ## Conclusion
+

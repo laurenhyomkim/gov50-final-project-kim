@@ -441,14 +441,11 @@ boxplot(survey_data$Anxiety, main = &quot;Box Plot of Anxiety Levels&quot;, ylab
 </div>
 <div id="results-section" class="section level2">
 <h2>Results Section</h2>
-<pre class="r"><code># Load necessary libraries
-library(tidyverse)
+<pre class="r"><code>library(tidyverse)
 library(knitr)
 
-# Read the data
 survey_data &lt;- read.csv(&quot;~/Desktop/gov50/mxmh_survey_results.csv&quot;)
 
-# Inspect the data
 head(survey_data)</code></pre>
 <pre><code>##            Timestamp Age Primary.streaming.service Hours.per.day While.working
 ## 1 8/27/2022 19:29:02  18                   Spotify           3.0           Yes
@@ -499,19 +496,13 @@ head(survey_data)</code></pre>
 ## 4       9          7        3   3       Improve I understand.
 ## 5       7          2        5   9       Improve I understand.
 ## 6       8          8        7   7       Improve I understand.</code></pre>
-<pre class="r"><code># Assuming high levels are defined (e.g., Anxiety &gt; 7, Depression &gt; 7, etc.)
-# Adjust these values as per your specific criteria
-high_levels &lt;- survey_data |&gt;
+<pre class="r"><code>high_levels &lt;- survey_data |&gt;
   filter(Anxiety &gt; 7, Depression &gt; 7, Insomnia &gt; 7, OCD &gt; 7)
 
-# Analyzing music genre preferences
-# Assuming genres are in columns like &#39;Frequency [Genre]&#39;
-# Adjust column names as per your dataset
 genre_preferences &lt;- high_levels |&gt;
   select(starts_with(&quot;Frequency&quot;)) |&gt;
   summarise_all(~mean(. == &quot;Very frequently&quot;, na.rm = TRUE))
 
-# Displaying the results
 kable(genre_preferences, format = &quot;markdown&quot;, caption = &quot;Music Genre Preferences among Individuals with High Levels of Anxiety, Depression, Insomnia, and OCD&quot;)</code></pre>
 <table style="width:100%;">
 <caption>Music Genre Preferences among Individuals with High Levels of
@@ -622,16 +613,10 @@ the other mental health issues because of how common it is among college
 students in America–in this way, it seemed most relevant to my life and
 I was most interested in understanding the effects of certain music
 genres on depression.</p>
-<pre class="r"><code># Load necessary libraries
-library(tidyverse)
+<pre class="r"><code>library(tidyverse)
 
-# Read the data
 survey_data &lt;- read.csv(&quot;~/Desktop/gov50/mxmh_survey_results.csv&quot;)
 
-# Assuming &#39;Depression&#39; is already a numeric variable
-# and &#39;Frequency [Rock]&#39; is a categorical variable that needs to be converted into a numeric scale
-
-# Convert &#39;Frequency [Rock]&#39; into numeric values
 survey_data &lt;- survey_data |&gt;
   mutate(Frequency_Rock_Num = case_when(
     `Frequency..Rock.` == &quot;Never&quot; ~ 0,
@@ -642,13 +627,10 @@ survey_data &lt;- survey_data |&gt;
     TRUE ~ NA_real_  # Assign NA for any other cases or missing data
   ))
 
-# Remove rows with NA in &#39;Depression&#39; or &#39;Frequency [Rock]&#39;
 survey_data &lt;- drop_na(survey_data, Depression, Frequency_Rock_Num)
 
-# Run the regression analysis
 regression_model &lt;- lm(Depression ~ Frequency_Rock_Num, data = survey_data)
 
-# Display the summary of the regression model
 summary(regression_model)</code></pre>
 <pre><code>## 
 ## Call:
