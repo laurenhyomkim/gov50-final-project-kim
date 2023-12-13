@@ -107,7 +107,7 @@ survey_data <- survey_data |>
     `Frequency..Rock.` == "Sometimes" ~ 2,
     `Frequency..Rock.` == "Often" ~ 3,
     `Frequency..Rock.` == "Very frequently" ~ 4,
-    TRUE ~ NA_real_  # Assign NA for any other cases or missing data
+    TRUE ~ NA_real_   
   ))
 
 survey_data <- drop_na(survey_data, Depression, Frequency_Rock_Num)

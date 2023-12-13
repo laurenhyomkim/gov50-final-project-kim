@@ -356,8 +356,8 @@ Health</h1>
 </div>
 
 
-<div id="introuction" class="section level2">
-<h2>Introuction</h2>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
 <p>Is there a correlation between mental health issues and music
 preference? Do people who suffer from high levels of anxiety,
 depression, insomnia, and OCD listen to certain types of music more
@@ -624,7 +624,7 @@ survey_data &lt;- survey_data |&gt;
     `Frequency..Rock.` == &quot;Sometimes&quot; ~ 2,
     `Frequency..Rock.` == &quot;Often&quot; ~ 3,
     `Frequency..Rock.` == &quot;Very frequently&quot; ~ 4,
-    TRUE ~ NA_real_  # Assign NA for any other cases or missing data
+    TRUE ~ NA_real_   
   ))
 
 survey_data &lt;- drop_na(survey_data, Depression, Frequency_Rock_Num)
